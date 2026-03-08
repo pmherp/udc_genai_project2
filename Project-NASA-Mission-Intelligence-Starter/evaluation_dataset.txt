@@ -1,0 +1,41 @@
+Evaluation Dataset for Reproduction
+Generated: 2026-03-08T10:25:40.863600Z
+
+Legen Sie eine Textdatei namens evaluation_dataset.txt bei, die einige Testfragen enthält,
+die verwendet wurden, sowie die erwarteten Antworten des Systems.
+
+Test Case 1
+Question: When was Apollo 11 mission?
+Expected System Answer:
+The Apollo 11 mission took place in July 1969. Specifically, the mission launched on July 16, 1969, as indicated in the document that establishes range zero for the mission at 13:32:00 G.m.t. on that date [4].
+Retrieved Sources:
+- apollo_11:NASA_NTRS_Archive_19710015566_textract_full_text
+- apollo_11:NASA_NTRS_Archive_19710015566_textract_full_text
+- apollo_11:NASA_NTRS_Archive_19710015566_textract_full_text
+- apollo_11:NASA_NTRS_Archive_19710015566_textract_full_text
+--------------------------------------------------------------------------------
+Test Case 2
+Question: During Apollo 13, what emergency triggered the mission abort?
+Expected System Answer:
+During Apollo 13, the mission abort was triggered by an oxygen tank explosion in the service module, which caused a loss of electrical power and oxygen supply to the command module. This emergency led to the mission being aborted and the crew using the lunar module as a "lifeboat" to return safely to Earth.
+Retrieved Sources:
+- apollo_11:NASA_NTRS_Archive_19710015566_textract_full_text
+- apollo_13:AS13_PAO_textract_full_text
+- apollo_11:NASA_NTRS_Archive_19710015566_textract_full_text
+- apollo_11:NASA_NTRS_Archive_19710015566_textract_full_text
+--------------------------------------------------------------------------------
+Test Case 3
+Question: Which technical factors are discussed in the Challenger disaster documents?
+Expected System Answer:
+The technical factors discussed in the Challenger disaster documents include:
+1. The amount of liquid fuel in the external tank at the time of the explosion.
+2. The explosive power of the remaining liquid fuel in terms of TNT equivalence.
+3. The capability of the orbiter fleet and the evaluation of long-term options for the fleet.
+
+These factors are mentioned in the mission audio transcripts related to the Challenger disaster.
+Retrieved Sources:
+- challenger:108-AAG_STS-51L_Mission_Audio_transcript
+- challenger:108-AAG_STS-51L_Mission_Audio_transcript
+- challenger:108-AAG_STS-51L_Mission_Audio_transcript
+- challenger:109-AAG_STS-51L_Mission_Audio_transcript
+--------------------------------------------------------------------------------
