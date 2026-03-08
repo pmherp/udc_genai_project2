@@ -24,6 +24,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 import chromadb
+import tiktoken
 from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -90,140 +91,32 @@ class ChromaEmbeddingPipelineTextOnly:
     def chunk_text(
         self, text: str, metadata: Dict[str, Any]
     ) -> List[Tuple[str, Dict[str, Any]]]:
-        """
-        Split text into token-safe chunks with metadata.
-        """
-
-        import re
-
-        import tiktoken
-
+        """Chunk text into smaller pieces with overlap and enhanced metadata"""
         tokenizer = tiktoken.encoding_for_model(self.embedding_model)
-
-        # Safe limits for OpenAI embeddings
-        MAX_MODEL_TOKENS = 8192
-        SAFETY_MARGIN = 200
-
-        max_tokens = min(self.chunk_size, MAX_MODEL_TOKENS - SAFETY_MARGIN)
-        overlap_tokens = self.chunk_overlap
-
-        # Better splitting for transcripts + documents
-        sentences = re.split(r"(?<=[.!?])\s+|\n+", text)
+        all_tokens = tokenizer.encode(text)
 
         chunks = []
-        current_chunk = []
-        current_tokens = 0
+        start_idx = 0
 
-        for sentence in sentences:
-            sentence = sentence.strip()
-            if not sentence:
-                continue
+        while start_idx < len(all_tokens):
+            # 1. Sicherstellen, dass der Chunk die Chunk-Größe
+            #    nie überschreitet
+            end_idx = start_idx + self.chunk_size
+            chunk_tokens = all_tokens[start_idx:end_idx]
 
-            tokens = tokenizer.encode(sentence)
-            sentence_tokens = len(tokens)
-
-            # If one sentence is too large → split by words
-            if sentence_tokens > max_tokens:
-                words = sentence.split()
-                buffer = []
-
-                for word in words:
-                    if not buffer:
-                        word_token_count = len(tokenizer.encode(word))
-                        if word_token_count > max_tokens:
-                            word_tokens = tokenizer.encode(word)
-                            for start in range(
-                                0,
-                                len(word_tokens),
-                                max_tokens,
-                            ):
-                                chunk_text = tokenizer.decode(
-                                    word_tokens[start : start + max_tokens]
-                                )
-
-                                chunk_metadata = metadata.copy()
-                                chunk_metadata["chunk_index"] = len(chunks) + 1
-                                chunks.append((chunk_text, chunk_metadata))
-                            continue
-
-                        buffer = [word]
-                        continue
-
-                    candidate_buffer = buffer + [word]
-                    token_count = len(
-                        tokenizer.encode(" ".join(candidate_buffer))
-                    )
-
-                    if token_count > max_tokens:
-                        chunk_text = " ".join(buffer)
-
-                        chunk_metadata = metadata.copy()
-                        chunk_metadata["chunk_index"] = len(chunks) + 1
-
-                        chunks.append((chunk_text, chunk_metadata))
-
-                        word_token_count = len(tokenizer.encode(word))
-                        if word_token_count > max_tokens:
-                            word_tokens = tokenizer.encode(word)
-                            for start in range(
-                                0,
-                                len(word_tokens),
-                                max_tokens,
-                            ):
-                                chunk_text = tokenizer.decode(
-                                    word_tokens[start : start + max_tokens]
-                                )
-
-                                chunk_metadata = metadata.copy()
-                                chunk_metadata["chunk_index"] = len(chunks) + 1
-                                chunks.append((chunk_text, chunk_metadata))
-                            buffer = []
-                        else:
-                            buffer = [word]
-                    else:
-                        buffer = candidate_buffer
-
-                if buffer:
-                    sentences.insert(0, " ".join(buffer))
-
-                continue
-
-            # If adding sentence exceeds chunk size → finalize chunk
-            if current_tokens + sentence_tokens > max_tokens:
-                chunk_text = " ".join(current_chunk)
-
-                chunk_metadata = metadata.copy()
-                chunk_metadata["chunk_index"] = len(chunks) + 1
-
-                chunks.append((chunk_text, chunk_metadata))
-
-                # Token-based overlap
-                overlap_chunk = []
-                overlap_count = 0
-
-                for s in reversed(current_chunk):
-                    s_tokens = len(tokenizer.encode(s))
-
-                    if overlap_count + s_tokens > overlap_tokens:
-                        break
-
-                    overlap_chunk.insert(0, s)
-                    overlap_count += s_tokens
-
-                current_chunk = overlap_chunk
-                current_tokens = overlap_count
-
-            current_chunk.append(sentence)
-            current_tokens += sentence_tokens
-
-        # Add final chunk
-        if current_chunk:
-            chunk_text = " ".join(current_chunk)
-
+            chunk_text = tokenizer.decode(chunk_tokens)
             chunk_metadata = metadata.copy()
             chunk_metadata["chunk_index"] = len(chunks) + 1
-
             chunks.append((chunk_text, chunk_metadata))
+
+            # 2. Überlappung konsequent anwenden
+            # Verschiebe den Startzeiger um (Größe - Überlappung)
+            start_idx += self.chunk_size - self.chunk_overlap
+
+            # Verhindere Endlosschleife,
+            # falls Überlappung >= Chunk-Größe
+            if self.chunk_size <= self.chunk_overlap:
+                break
 
         return chunks
 
