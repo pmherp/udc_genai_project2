@@ -57,6 +57,20 @@ To start the application, run:
 streamlit run chat.py
 ```
 
+## Running Tests
+
+Run the component smoke test suite:
+
+```bash
+python tests/test_component_smoke.py
+```
+
+Alternative via unittest module:
+
+```bash
+python -m unittest -v tests/test_component_smoke.py
+```
+
 ---
 
 Enjoy exploring NASA mission data with GenAI!
