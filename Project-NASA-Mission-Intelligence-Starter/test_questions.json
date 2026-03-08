@@ -1,0 +1,38 @@
+[
+  {
+    "question": "What was the primary objective of Apollo 11?",
+    "reference": "Apollo 11's primary objective was to perform a crewed lunar landing and return safely to Earth.",
+    "mission": "apollo_11",
+    "category": "overview"
+  },
+  {
+    "question": "During Apollo 13, what emergency triggered the mission abort?",
+    "reference": "The Apollo 13 mission was aborted after an oxygen tank explosion in the service module.",
+    "mission": "apollo_13",
+    "category": "emergency"
+  },
+  {
+    "question": "Which technical factors are discussed in the Challenger disaster analysis documents?",
+    "reference": "The Challenger analysis documents discuss technical factors such as SRB O-ring performance and low-temperature effects.",
+    "mission": "challenger",
+    "category": "catastrophe_analysis"
+  },
+  {
+    "question": "Who were the Apollo 11 crew members and what were their roles?",
+    "reference": "Apollo 11 crew members were Neil Armstrong (Commander), Buzz Aldrin (Lunar Module Pilot), and Michael Collins (Command Module Pilot).",
+    "mission": "apollo_11",
+    "category": "crew"
+  },
+  {
+    "question": "How did Apollo 13 use the Lunar Module to support crew survival?",
+    "reference": "Apollo 13 used the Lunar Module as a lifeboat to provide life support and propulsion after the service module failure.",
+    "mission": "apollo_13",
+    "category": "technical"
+  },
+  {
+    "question": "What key timeline milestones are described in Apollo 11 mission planning documents?",
+    "reference": "Apollo 11 planning documents describe timeline milestones including launch, translunar injection, lunar landing, ascent, rendezvous, and Earth return.",
+    "mission": "apollo_11",
+    "category": "timeline"
+  }
+]

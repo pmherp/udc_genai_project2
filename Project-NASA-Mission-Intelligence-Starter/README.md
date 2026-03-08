@@ -234,6 +234,37 @@ data/
 - [ ] Batch processing handles large datasets
 - [ ] Performance is acceptable for interactive use
 
+## 🧾 Evaluation Dataset and Batch Evaluation
+
+The repository includes [test_questions.json](test_questions.json) with
+missionsrelevanten Fragen über mehrere Kategorien:
+- overview
+- emergency
+- catastrophe_analysis
+- crew
+- technical
+- timeline
+
+Each entry includes:
+- `question`
+- `reference`
+- `mission`
+- `category`
+
+Run end-to-end batch evaluation:
+
+```bash
+python ragas_evaluator.py \
+   --dataset-path test_questions.json \
+   --openai-key "$OPENAI_API_KEY" \
+   --chroma-dir ./chroma_db_openai \
+   --collection-name nasa_space_missions_text
+```
+
+The batch run prints:
+- Per-question metric outputs
+- Aggregated metric summary (count/mean/min/max) per metric
+
 ## 🚨 Common Challenges and Solutions
 
 ### **API Integration Issues**
